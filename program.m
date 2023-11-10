@@ -63,15 +63,19 @@ disp(testingLabelDis);
 % 
 k=5
 %   initialize array to store predicted labels
+ % measure computation time for L2
  tic
 predictEuclidean = zeros(size(labelTesting));
- % measure computation time for L2
+
 
 
 for i = 1:size(imageTesting,1)
+%Define our parameters 
     comp1=imageTraining;
     comp2 = repmat(imageTesting(i,:), [size(imageTraining,1),1]);
+%calculate euclidean distance
     Euclideandistance = sqrt(sum((comp1-comp2).^2,2));
+%sort the distance
     [~,ind]=sort(Euclideandistance);
     indSort=ind(1:k);
     labs=labelTraining(ind);
@@ -79,20 +83,25 @@ for i = 1:size(imageTesting,1)
 end
 
 computationTimeL2=toc;
+%calculate euclidean accuracy and confusion chart
 calculateEuclideanAccuracy=sum(labelTesting==predictEuclidean)/size(labelTesting,1);
 chart1= confusionchart(labelTesting, predictEuclidean);
 
+%results printed to terminal to check
 disp("Model is KNN Model using the Euclidean distance metric");
 disp("Accuracy: "+ calculateEuclideanAccuracy);
 disp("Computation time: "+ computationTimeL2);
 
+%Carry out K-NN model classification with l1 distance
+%  measure computation time for L1
 tic
+% define our prediction 
 predictL1 = zeros(size(labelTesting,1),1);
-%  % measure computation time for L1
-% 
+
  for i = 1:size(imageTesting,1)
      comp1=imageTraining;
      comp2=repmat(imageTesting(i,:), [size(imageTraining,1),1]);
+%calculate the l1 distance
      distanceL1 = sum(abs(comp1-comp2),2);
      [~,indL1]=sort(distanceL1);
      indL1=indL1(1:k);
@@ -101,14 +110,15 @@ predictL1 = zeros(size(labelTesting,1),1);
  end
  
  computationTimel1=toc;
+%Accuracy is calculated
  calculateL1Accuracy=sum(labelTesting==predictL1)/size(labelTesting,1);
  chart2 = confusionchart(labelTesting, predictL1);
-% 
+% display all the results
 disp("Model is KNN Model using the L1 metric");
 disp("Accuracy: "+ calculateL1Accuracy);
 disp("Computation time: "+ computationTimel1);
 
-
+%save all results in .mat file for analysis later
 save('KNN_results.mat', 'predictEuclidean', 'computationTimeL2','calculateEuclideanAccuracy','predictL1', 'computationTimel1', 'calculateL1Accuracy');
 
 % we use the SVM model as a means for comparison
@@ -141,13 +151,15 @@ tic;
 ensemblePredict= predict(ensembleModel, imageTesting);
 testingTimeEnsemble=toc;
 
+%calculate ensemble accuracy
 calculateEnsembleAccuracy = sum(labelTesting==ensemblePredict)/size(labelTesting,1);
 chart3 = confusionchart(labelTesting, ensemblePredict);
+%display results in terminal as part of testing 
 disp("Model is Ensemble and used as a means for comparison with KNN model");
 disp("Accuracy: "+ calculateEnsembleAccuracy);
 disp("Training time: "+ trainingTimeEnsemble);
 disp("Testing time: "+ testingTimeEnsemble);
 
-
+%save all results for analysis later
 save('ModelResults.mat','predictSvm' ,'trainingTimeSVM','testingTimeSVM', 'calculateSVMAccuracy','ensemblePredict', 'trainingTimeEnsemble', 'testingTimeEnsemble', 'calculateEnsembleAccuracy');
 
