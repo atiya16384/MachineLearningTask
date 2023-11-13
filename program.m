@@ -64,7 +64,7 @@ disp(testingLabelDis);
 k=5
 %   initialize array to store predicted labels
  % measure computation time for L2
- tic
+ tic;
 predictEuclidean = zeros(size(labelTesting));
 
 
@@ -94,7 +94,7 @@ disp("Computation time: "+ computationTimeL2);
 
 %Carry out K-NN model classification with l1 distance
 %  measure computation time for L1
-tic
+tic;
 % define our prediction 
 predictL1 = zeros(size(labelTesting,1),1);
 
